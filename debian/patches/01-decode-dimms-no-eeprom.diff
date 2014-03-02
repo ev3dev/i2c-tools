@@ -1,0 +1,20 @@
+--- i2c-tools-3.1.1.orig/eeprom/decode-dimms
++++ i2c-tools-3.1.1/eeprom/decode-dimms
+@@ -1826,9 +1826,14 @@ sub get_dimm_list
+ 		close(DIR);
+ 	}
+ 
+-	if (!$opened) {
+-		print STDERR "No EEPROM found, try loading the eeprom or at24 module\n";
+-		exit;
++	if (!@files) {
++		if (!$opened) {
++			print STDERR "No EEPROM found, try loading the eeprom or at24 module\n";
++			exit;
++		} else {
++			print STDERR "No EEPROM found, the kernel probably does not support your hardware.\n";
++			exit;
++		}
+ 	}
+ 
+ 	return sort { $a->{file} cmp $b->{file} } @files;
