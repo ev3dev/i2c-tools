@@ -22,7 +22,7 @@ LDFLAGS += $(shell dpkg-buildflags --get LDFLAGS)
 export CFLAGS CPPFLAGS LDFLAGS
 
 PYVERS = $(shell pyversions -v -r debian/control)
-
+PY3VERS = $(shell py3versions -v -r debian/control)
 clean:
 	dh_testdir
 	dh_testroot
@@ -37,7 +37,7 @@ clean:
 # Build everything that goes into the Debian package.  Use recursive make
 # invocations to build all of the interesting components.
 build: build-arch build-indep
-build-arch: build-stamp-binaries $(PYVERS:%=build-stamp-python-%)
+build-arch: build-stamp-binaries $(PYVERS:%=build-stamp-python-%) $(PY3VERS:%=build-stamp-python3-%)
 build-indep: build-stamp-binaries
 
 build-stamp-binaries:
@@ -51,7 +51,13 @@ build-stamp-python-%:
 		CFLAGS="$(CFLAGS) -I../include" python$* setup.py build
 	touch $@
 
-install: install-stamp-binaries $(PYVERS:%=install-stamp-python-%)
+build-stamp-python3-%:
+	dh_testdir
+	cd py-smbus && \
+		CFLAGS="$(CFLAGS) -I../include -DPYTHON_3" python$* setup.py build
+	touch $@
+
+install: install-stamp-binaries $(PYVERS:%=install-stamp-python-%)  $(PY3VERS:%=install-stamp-python3-%)
 
 install-stamp-binaries: build-stamp-binaries
 	dh_testdir 
@@ -75,7 +81,16 @@ install-stamp-python-%: build-stamp-python-%
 		CFLAGS="$(CFLAGS) -I../include" python$* setup.py install --install-layout=deb --root=$(CURDIR)/debian/python-smbus
 
 	touch $@
+install-stamp-python3-%: build-stamp-python3-%
+	dh_testdir
+	dh_testroot
+	dh_installdirs
 
+	$(MAKE) install DESTDIR=$(CURDIR)/debian/tmp prefix=/usr
+	cd py-smbus && \
+		CFLAGS="$(CFLAGS) -I../include -DPYTHON_3" python$* setup.py install --install-layout=deb --root=$(CURDIR)/debian/python3-smbus
+
+	touch $@
 
 # Build architecture-independent files here.
 binary-indep: build install
@@ -108,6 +123,7 @@ binary-arch: build install
 	dh_perl -a
 	dh_makeshlibs -a
 	dh_python2 -a
+	dh_python3 -a
 	dh_installdeb -a
 	dh_shlibdeps -a
 	dh_gencontrol -a

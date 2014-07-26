@@ -1,11 +1,12 @@
 Source: i2c-tools
 Section: utils
 Priority: extra
-Build-Depends: debhelper (>= 5), python-all-dev (>= 2.6.6-3~)
+Build-Depends: debhelper (>= 5), python-all-dev (>= 2.6.6-3~), python3-dev (>= 3.2)
 Maintainer: Aurelien Jarno <aurel32@debian.org>
 Standards-Version: 3.9.5
 Homepage: http://www.lm-sensors.org
 X-Python-Version: >= 2.2
+X-Python3-Version: >=3.2
 
 Package: i2c-tools
 Architecture: any
@@ -37,5 +38,16 @@ Provides: ${python:Provides}
 Recommends: i2c-tools
 Description: Python bindings for Linux SMBus access through i2c-dev 
  This Python module allows SMBus access through the I2C /dev interface on 
+ Linux hosts.  The host kernel must have I2C support, I2C device interface
+ support, and a bus adapter driver.
+
+Package: python3-smbus
+Architecture: any
+Section: python
+Depends: ${shlibs:Depends}, ${python3:Depends}, ${misc:Depends}
+Provides: ${python3:Provides}
+Recommends: i2c-tools
+Description: Python3 bindings for Linux SMBus access through i2c-dev
+ This Python3 module allows SMBus access through the I2C /dev interface on
  Linux hosts.  The host kernel must have I2C support, I2C device interface
  support, and a bus adapter driver.

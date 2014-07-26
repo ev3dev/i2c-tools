@@ -33,6 +33,7 @@
 #define I2C_SMBUS_I2C_BLOCK_DATA	8
 #endif
 
+#ifndef PYTHON_3
 PyDoc_STRVAR(SMBus_module_doc,
 	"This module defines an object type that allows SMBus transactions\n"
 	"on hosts running the Linux kernel.  The host kernel must have I2C\n"
@@ -42,6 +43,7 @@ PyDoc_STRVAR(SMBus_module_doc,
 	"\n"
 	"Because the I2C device interface is opened R/W, users of this\n"
 	"module usually must have root permissions.\n");
+#endif
 
 typedef struct {
 	PyObject_HEAD
@@ -92,7 +94,11 @@ SMBus_dealloc(SMBus *self)
 	PyObject *ref = SMBus_close(self);
 	Py_XDECREF(ref);
 
+#ifndef PYTHON_3
 	self->ob_type->tp_free((PyObject *)self);
+#else
+	Py_TYPE(self)->tp_free((PyObject*)self);
+#endif
 }
 
 #define MAXPATH 16
@@ -432,11 +438,19 @@ SMBus_list_to_data(PyObject *list, union i2c_smbus_data *data)
 
 	for (ii = 0; ii < len; ii++) {
 		PyObject *val = PyList_GET_ITEM(list, ii);
+#ifndef PYTHON_3
 		if (!PyInt_Check(val)) {
+#else
+		if (!PyLong_Check(val)) {
+#endif
 			PyErr_SetString(PyExc_TypeError, msg);
 			return 0; /* fail */
 		}
+#ifndef PYTHON_3
 		data->block[ii+1] = (__u8)PyInt_AS_LONG(val);
+#else
+		data->block[ii+1] = (__u8)PyLong_AS_LONG(val);
+#endif
 	}
 
 	return 1; /* success */
@@ -635,8 +649,13 @@ static PyGetSetDef SMBus_getset[] = {
 };
 
 static PyTypeObject SMBus_type = {
+#ifndef PYTHON_3
 	PyObject_HEAD_INIT(NULL)
 	0,				/* ob_size */
+#else
+	PyVarObject_HEAD_INIT(NULL, 0)
+#endif
+
 	"smbus.SMBus",			/* tp_name */
 	sizeof(SMBus),			/* tp_basicsize */
 	0,				/* tp_itemsize */
@@ -675,15 +694,36 @@ static PyTypeObject SMBus_type = {
 	0,				/* tp_alloc */
 	SMBus_new,			/* tp_new */
 };
-
+#ifndef PYTHON_3
 static PyMethodDef SMBus_module_methods[] = {
 	{NULL}
+#else
+static struct PyModuleDef SMBusModule = {
+        PyModuleDef_HEAD_INIT,
+        "SMBus",     /* m_name */
+        "This module defines an object type that allows SMBus transactions\n"
+	    "on hosts running the Linux kernel.  The host kernel must have I2C\n"
+	    "support, I2C device interface support, and a bus adapter driver.\n"
+	    "All of these can be either built-in to the kernel, or loaded from\n"
+	    "modules.\n"
+	    "\n"
+	    "Because the I2C device interface is opened R/W, users of this\n"
+	    "module usually must have root permissions.\n",  /* m_doc */
+        -1,                  /* m_size */
+        NULL,    /* m_methods */
+        NULL,                /* m_reload */
+        NULL,                /* m_traverse */
+        NULL,                /* m_clear */
+        NULL,                /* m_free */
+#endif
+
 };
 
 #ifndef PyMODINIT_FUNC	/* declarations for DLL import/export */
 #define PyMODINIT_FUNC void
 #endif
 PyMODINIT_FUNC
+#ifndef PYTHON_3
 initsmbus(void) 
 {
 	PyObject* m;
@@ -696,4 +736,24 @@ initsmbus(void)
 	Py_INCREF(&SMBus_type);
 	PyModule_AddObject(m, "SMBus", (PyObject *)&SMBus_type);
 }
+#else
+PyInit_smbus(void)
+{
+	PyObject* m;
+
+	if (PyType_Ready(&SMBus_type) < 0)
+		return NULL;
+
+	m = PyModule_Create(&SMBusModule);
+
+	if (m == NULL)
+		return NULL;
+
+	Py_INCREF(&SMBus_type);
+	PyModule_AddObject(m, "SMBus", (PyObject *)&SMBus_type);
+
+	return m;
+}
+#endif
+
 
