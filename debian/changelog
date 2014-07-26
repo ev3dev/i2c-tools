@@ -1,3 +1,14 @@
+i2c-tools (3.1.1-1ev3dev1~1.gbpabb7e7) testing; urgency=medium
+
+  ** SNAPSHOT build @abb7e7d6275a6a40e1d7ff0a645dd26eac23a962 **
+
+  [ Gong Yi ]
+  * Add python3 support
+
+  [ David Lechner ]
+
+ -- Gong Yi <topikachu@163.com>  Sat, 26 Jul 2014 12:49:02 -0500
+
 i2c-tools (3.1.1-1) unstable; urgency=medium
 
   * New upstream version.
