@@ -1,0 +1,110 @@
+Description: Change minimum address from 0x03 to 0x01
+ Technically, address 0x01 and 0x2 are reserved according to the I2C spec.
+ However, many LEGO MINDSTORMS I2C sensors use an I2C address of 0x01, so in
+ order to communicate with those sensors, we need to patch i2c-tools so they
+ are not restricted.
+Author: David Lechner <david@lechnology.com>
+---
+This patch header follows DEP-3: http://dep.debian.net/deps/dep3/
+--- a/tools/i2cbusses.c
++++ b/tools/i2cbusses.c
+@@ -363,9 +363,9 @@
+ 		fprintf(stderr, "Error: Chip address is not a number!\n");
+ 		return -1;
+ 	}
+-	if (address < 0x03 || address > 0x77) {
++	if (address < 0x01 || address > 0x77) {
+ 		fprintf(stderr, "Error: Chip address out of range "
+-			"(0x03-0x77)!\n");
++			"(0x01-0x77)!\n");
+ 		return -2;
+ 	}
+ 
+--- a/tools/i2cdetect.8
++++ b/tools/i2cdetect.8
+@@ -26,7 +26,7 @@
+ \fIi2cbus\fR indicates the number or name of the I2C bus to be scanned, and
+ should correspond to one of the busses listed by \fIi2cdetect -l\fR.
+ The optional parameters \fIfirst\fR and \fIlast\fR restrict the scanning
+-range (default: from 0x03 to 0x77).
++range (default: from 0x01 to 0x77).
+ .PP
+ As there is no standard I2C detection command, i2cdetect uses arbitrary
+ SMBus commands (namely SMBus quick write and SMBus receive byte) to probe
+--- a/tools/i2cdetect.c
++++ b/tools/i2cdetect.c
+@@ -190,7 +190,7 @@
+ 	char filename[20];
+ 	unsigned long funcs;
+ 	int mode = MODE_AUTO;
+-	int first = 0x03, last = 0x77;
++	int first = 0x01, last = 0x77;
+ 	int flags = 0;
+ 	int yes = 0, version = 0, list = 0;
+ 
+--- a/tools/i2cdump.8
++++ b/tools/i2cdump.8
+@@ -44,7 +44,7 @@
+ At least two options must be provided to i2cdump. \fIi2cbus\fR indicates the
+ number or name of the I2C bus to be scanned. This number should correspond to one
+ of the busses listed by \fIi2cdetect -l\fR. \fIaddress\fR indicates the
+-address to be scanned on that bus, and is an integer between 0x03 and 0x77.
++address to be scanned on that bus, and is an integer between 0x01 and 0x77.
+ .PP
+ The \fImode\fR parameter, if specified, is one of the letters \fBb\fP, \fBw\fP,
+ \fBs\fP, or \fBi\fP, corresponding to a read size of a single byte, a 16-bit
+--- a/tools/i2cdump.c
++++ b/tools/i2cdump.c
+@@ -36,7 +36,7 @@
+ 	fprintf(stderr,
+ 		"Usage: i2cdump [-f] [-y] [-r first-last] I2CBUS ADDRESS [MODE [BANK [BANKREG]]]\n"
+ 		"  I2CBUS is an integer or an I2C bus name\n"
+-		"  ADDRESS is an integer (0x03 - 0x77)\n"
++		"  ADDRESS is an integer (0x01 - 0x77)\n"
+ 		"  MODE is one of:\n"
+ 		"    b (byte, default)\n"
+ 		"    w (word)\n"
+--- a/tools/i2cset.8
++++ b/tools/i2cset.8
+@@ -58,7 +58,7 @@
+ There are three required options to i2cset. \fIi2cbus\fR indicates the number
+ or name of the I2C bus to be scanned.  This number should correspond to one of
+ the busses listed by \fIi2cdetect -l\fR. \fIchip-address\fR specifies the
+-address of the chip on that bus, and is an integer between 0x03 and 0x77.
++address of the chip on that bus, and is an integer between 0x01 and 0x77.
+ \fIdata-address\fR specifies the address on that chip to write to, and is an
+ integer between 0x00 and 0xFF.
+ .PP
+--- a/tools/i2cset.c
++++ b/tools/i2cset.c
+@@ -38,7 +38,7 @@
+ 	fprintf(stderr,
+ 		"Usage: i2cset [-f] [-y] [-m MASK] [-r] I2CBUS CHIP-ADDRESS DATA-ADDRESS [VALUE] ... [MODE]\n"
+ 		"  I2CBUS is an integer or an I2C bus name\n"
+-		"  ADDRESS is an integer (0x03 - 0x77)\n"
++		"  ADDRESS is an integer (0x01 - 0x77)\n"
+ 		"  MODE is one of:\n"
+ 		"    c (byte, no value)\n"
+ 		"    b (byte data, default)\n"
+--- a/tools/i2cget.8
++++ b/tools/i2cget.8
+@@ -38,7 +38,7 @@
+ There are two required options to i2cget. \fIi2cbus\fR indicates the number
+ or name of the I2C bus to be scanned.  This number should correspond to one of
+ the busses listed by \fIi2cdetect -l\fR. \fIchip-address\fR specifies the
+-address of the chip on that bus, and is an integer between 0x03 and 0x77.
++address of the chip on that bus, and is an integer between 0x01 and 0x77.
+ .PP
+ \fIdata-address\fR specifies the address on that chip to read from, and is
+ an integer between 0x00 and 0xFF. If omitted, the currently active register
+--- a/tools/i2cget.c
++++ b/tools/i2cget.c
+@@ -41,7 +41,7 @@
+ 	fprintf(stderr,
+ 		"Usage: i2cget [-f] [-y] I2CBUS CHIP-ADDRESS [DATA-ADDRESS [MODE]]\n"
+ 		"  I2CBUS is an integer or an I2C bus name\n"
+-		"  ADDRESS is an integer (0x03 - 0x77)\n"
++		"  ADDRESS is an integer (0x01 - 0x77)\n"
+ 		"  MODE is one of:\n"
+ 		"    b (read byte data, default)\n"
+ 		"    w (read word data)\n"

@@ -1,2 +1,3 @@
 01-decode-dimms-no-eeprom.diff
 ev3dev-python3.patch
+ev3dev-address-range.patch

@@ -1,3 +1,11 @@
+i2c-tools (3.1.1-1ev3dev1~2.gbp881910) UNRELEASED; urgency=medium
+
+  ** SNAPSHOT build @8819103a147bec2832b6690e6dcc06fcda911fcc **
+
+  * package for ev3dev
+
+ -- David Lechner <david@lechnology.com>  Sat, 26 Jul 2014 12:52:39 -0500
+
 i2c-tools (3.1.1-1ev3dev1~1.gbpabb7e7) testing; urgency=medium
 
   ** SNAPSHOT build @abb7e7d6275a6a40e1d7ff0a645dd26eac23a962 **
