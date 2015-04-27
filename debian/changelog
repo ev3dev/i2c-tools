@@ -1,3 +1,9 @@
+i2c-tools (3.1.1-1ev3dev2) stable; urgency=medium
+
+  * Rebuild only, no Changes. Had to bump version since jessie went stable.
+
+ -- David Lechner <david@lechnology.com>  Sun, 26 Apr 2015 20:59:51 -0500
+
 i2c-tools (3.1.1-1ev3dev1) testing; urgency=medium
 
   [ Gong Yi ]
