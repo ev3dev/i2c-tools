@@ -48,7 +48,7 @@ use vars qw($opt_html $opt_bodyonly $opt_side_by_side $opt_merge
 use constant LITTLEENDIAN	=> "little-endian";
 use constant BIGENDIAN		=> "big-endian";
 
-$revision = '$Revision: 6231 $ ($Date: 2014-02-20 10:54:34 +0100 (jeu. 20 févr. 2014) $)';
+$revision = '$Revision: 6250 $ ($Date: 2014-06-19 09:19:09 +0200 (jeu. 19 juin 2014) $)';
 $revision =~ s/\$\w+: (.*?) \$/$1/g;
 $revision =~ s/ \([^()]*\)//;
 
@@ -1289,8 +1289,9 @@ sub decode_ddr3_sdram($)
 	printl("DLL-Off Mode supported?", ($bytes->[30] & 128) ? "Yes" : "No");
 	printl("Operating temperature range", sprintf "0-%d degrees C",
 		($bytes->[31] & 1) ? 95 : 85);
-	printl("Refresh Rate in extended temp range",
-		($bytes->[31] & 2) ? "2X" : "1X");
+	printl_cond($bytes->[31] & 1,
+		    "Refresh Rate in extended temp range",
+		    ($bytes->[31] & 2) ? "1X" : "2X");
 	printl("Auto Self-Refresh?", ($bytes->[31] & 4) ? "Yes" : "No");
 	printl("On-Die Thermal Sensor readout?",
 		($bytes->[31] & 8) ? "Yes" : "No");

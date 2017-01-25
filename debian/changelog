@@ -1,3 +1,30 @@
+i2c-tools (3.1.2-3) unstable; urgency=medium
+
+  * Add 02-udevadm.diff to change the udevadm path from /sbin to /bin
+    (Closes: #852567).
+
+ -- Aurelien Jarno <aurel32@debian.org>  Wed, 25 Jan 2017 21:41:33 +0100
+
+i2c-tools (3.1.2-2) unstable; urgency=medium
+
+  * Set architecture to linux-any.
+  * Pass CPPFLAGS through CFLAGS as the upstream makefile doesn't support the
+    former.
+
+ -- Aurelien Jarno <aurel32@debian.org>  Mon, 28 Nov 2016 18:47:04 +0100
+
+i2c-tools (3.1.2-1) unstable; urgency=medium
+
+  * New upstream version.
+  * Update debian/copyright with an alternative download location given
+    the upstream website is dead.
+  * Rewrite debian/rules using dh.
+  * Remove support for makedev, unconditionally depends on udev.
+  * Add a python3 package (Closes: #800774).
+  * Bump Standards-Version to 3.9.8.
+
+ -- Aurelien Jarno <aurel32@debian.org>  Mon, 07 Nov 2016 23:00:10 +0100
+
 i2c-tools (3.1.1-1) unstable; urgency=medium
 
   * New upstream version.

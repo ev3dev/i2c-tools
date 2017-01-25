@@ -9,18 +9,13 @@ case "$1" in
                 addgroup --quiet --system i2c || true
         fi
 
-        # Create the device node if MAKEDEV exists
-        if [ -x /sbin/MAKEDEV ] && [ ! -c /dev/i2c-0 ]; then
-		(cd /dev && MAKEDEV i2c)
-		for i in `seq 1 16` ; do
-			dev=/dev/i2c-$i
-	                if [ -c $dev ]; then
-				chmod 0660 $dev
-				chown root:i2c $dev
-	               	fi
-		done
+        # Trigger a udev reload
+        if which udevadm >/dev/null 2>&1 ; then
+                udevadm control --reload-rules || true
+                udevadm trigger --subsystem-match=i2c-dev --action=change || true
         fi
     ;;
+
     abort-upgrade|abort-remove|abort-deconfigure)
     ;;
 

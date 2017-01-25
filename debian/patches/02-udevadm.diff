@@ -1,0 +1,11 @@
+--- i2c-tools-3.1.2.orig/stub/i2c-stub-from-dump
++++ i2c-tools-3.1.2/stub/i2c-stub-from-dump
+@@ -104,7 +104,7 @@ sub load_kernel_drivers
+ 		system("/sbin/modprobe", "i2c-stub") == 0 || exit 1;
+ 	}
+ 	# udev may take some time to create the device node
+-	if (!(-x "/sbin/udevadm" && system("/sbin/udevadm settle") == 0)
++	if (!(-x "/bin/udevadm" && system("/bin/udevadm settle") == 0)
+ 	 && !(-x "/sbin/udevsettle" && system("/sbin/udevsettle") == 0)) {
+ 		sleep(1);
+ 	}
