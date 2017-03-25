@@ -1,3 +1,9 @@
+i2c-tools (3.1.2-3ev3dev1) testing; urgency=medium
+
+  * Target stretch
+
+ -- David Lechner <david@lechnology.com>  Fri, 24 Mar 2017 23:05:50 -0500
+
 i2c-tools (3.1.2-3) unstable; urgency=medium
 
   * Add 02-udevadm.diff to change the udevadm path from /sbin to /bin
