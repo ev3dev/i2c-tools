@@ -1,21 +1,20 @@
 Source: i2c-tools
 Section: utils
 Priority: extra
-Build-Depends: debhelper (>= 5), python-all-dev (>= 2.6.6-3~), python3-dev (>= 3.2)
+Build-Depends: debhelper, dh-python, python-all-dev, python3-all-dev
 Maintainer: David Lechner <david@lechnology.com>
 XSBC-Original-Maintainer: Aurelien Jarno <aurel32@debian.org>
-Standards-Version: 3.9.5
-Homepage: http://www.lm-sensors.org
+Standards-Version: 3.9.8
 Vcs-Browser: https://github.com/ev3dev/i2c-tools
 Vcs-Git: git://github.com/ev3dev/i2c-tools.git
 X-Python-Version: >= 2.2
-X-Python3-Version: >=3.2
+X-Python3-Version: >= 3.0
 
 Package: i2c-tools
-Architecture: any
+Architecture: linux-any
 Section: utils
 Conflicts: lm-sensors (<< 1:3.0.0-1)
-Depends: ${shlibs:Depends}, ${perl:Depends}, ${misc:Depends}, adduser, udev | makedev
+Depends: ${shlibs:Depends}, ${perl:Depends}, ${misc:Depends}, adduser, udev
 Recommends: read-edid
 Suggests: libi2c-dev, python-smbus
 Description: heterogeneous set of I2C tools for Linux
@@ -34,8 +33,9 @@ Description: userspace I2C programming library development files
  from userspace and without the knowledge of Linux kernel internals.
 
 Package: python-smbus
-Architecture: any
+Architecture: linux-any
 Section: python
+Multi-Arch: same
 Depends: ${shlibs:Depends}, ${python:Depends}, ${misc:Depends}
 Provides: ${python:Provides}
 Recommends: i2c-tools
@@ -45,12 +45,13 @@ Description: Python bindings for Linux SMBus access through i2c-dev
  support, and a bus adapter driver.
 
 Package: python3-smbus
-Architecture: any
+Architecture: linux-any
 Section: python
+Multi-Arch: same
 Depends: ${shlibs:Depends}, ${python3:Depends}, ${misc:Depends}
 Provides: ${python3:Provides}
 Recommends: i2c-tools
-Description: Python3 bindings for Linux SMBus access through i2c-dev
- This Python3 module allows SMBus access through the I2C /dev interface on
+Description: Python 3 bindings for Linux SMBus access through i2c-dev 
+ This Python 3 module allows SMBus access through the I2C /dev interface on 
  Linux hosts.  The host kernel must have I2C support, I2C device interface
  support, and a bus adapter driver.
